@@ -1,0 +1,33 @@
+{% extends './bootstrap.html' %}
+
+{% block content %}
+
+<h1>
+    Phylodating
+</h1>
+
+<p>
+    Welcome to the main tool page!
+</p>
+
+<form action={% url 'phylodating:results' %} method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form-group">
+            {% if field.name != "email" %}
+                <label for="id_{{ field.name }}">{{ field.label }}</label>
+                <div class="custom-file">
+                    {{ field }}
+                    <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
+                </div>
+            {% endif %}
+            {% if field.name == "email" %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}

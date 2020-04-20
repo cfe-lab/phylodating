@@ -1,0 +1,28 @@
+<h1>
+    Details
+</h1>
+
+<p>Job created on: {{ job.created_at }}</p>
+<p>Your job ID is: {{ job.job_id }}</p>
+<p>Job Status: {{ job.status }}</p>
+
+{% if job.status == "F" %}
+    <p>Error:</p>
+    <pre><code>
+        {{ job.stderr }}
+    </code></pre>
+
+    <p>Args:</p>
+    <pre><code>
+        {% for k,v in job.jobs.items %}
+            {{k}}
+            {{v.args}}
+        {% endfor %}
+    </code></pre>
+{% endif %}
+
+<a href="{% url 'phylodating:download' job_id=job.job_id %}">
+    <button>Download</button>
+</a>
+
+{% comment %} {{ job.rooted_tree.path }} {% endcomment %}
