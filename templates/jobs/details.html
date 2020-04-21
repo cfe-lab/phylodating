@@ -7,22 +7,11 @@
 <p>Job Status: {{ job.status }}</p>
 
 {% if job.status == "F" %}
-    <p>Error:</p>
-    <pre><code>
-        {{ job.stderr }}
-    </code></pre>
-
-    <p>Args:</p>
-    <pre><code>
-        {% for k,v in job.jobs.items %}
-            {{k}}
-            {{v.args}}
-        {% endfor %}
-    </code></pre>
+    <p>
+        Your job has unfortunately failed :(. Details will be sent to the web administrator who will help you resolve the issue!
+    </p>
 {% endif %}
 
 <a href="{% url 'phylodating:download' job_id=job.job_id %}">
     <button>Download</button>
 </a>
-
-{% comment %} {{ job.rooted_tree.path }} {% endcomment %}

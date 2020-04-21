@@ -22,7 +22,6 @@ PLOT = os.path.join(
 
 class JobProcess:
 
-
     def __init__(self, job_model):
         self.job_model = job_model
         self.status = 'N'
@@ -33,7 +32,6 @@ class JobProcess:
             'plot_divergence': self.plot()
         }
         self.update_status()
-
 
     def update_status(self):
         stdout = []
@@ -57,7 +55,6 @@ class JobProcess:
         self.cmd = '\n'.join(cmds)
         self.job_model.save()
 
-
     def update_output_paths(self):
         root = os.path.join(
             os.path.dirname(
@@ -70,8 +67,8 @@ class JobProcess:
         self.job_model.rooted_tree_out.name = os.path.join(root, 'rooted_tree.nwk')
         self.job_model.data_out.name = os.path.join(root, 'data.csv')
         self.job_model.stats_out.name = os.path.join(root, 'stats.csv')
+        self.job_model.plot.name = os.path.join(root, 'divergence_vs_time.png')
         self.job_model.save()
-
 
     def spawn(self, cmd):
         try:
@@ -86,7 +83,6 @@ class JobProcess:
             return e
         return completed_process
 
-
     def root_and_regress(self):
         cmd = [
             'Rscript',
@@ -99,7 +95,6 @@ class JobProcess:
             f'--stats={self.job_model.stats_out.path}'
         ]
         return self.spawn(cmd)
-
 
     def plot(self):
         self.plot_prefix = os.path.join(
