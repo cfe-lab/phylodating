@@ -11,8 +11,8 @@ from .utils import JobProcess
 from django.core import management
 import subprocess
 
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-ROOT = os.path.dirname(THIS_DIR)
+ROOT = '/alldata/bblab_site'
+
 
 def index(request):
     form = JobForm()
