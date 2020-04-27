@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from .models import Job
 from .forms import JobForm
 from .utils import JobProcess
+from .version import VERSION
 from django.core import management
 import subprocess
 
@@ -16,7 +17,15 @@ ROOT = '/alldata/bblab_site'
 
 def index(request):
     form = JobForm()
-    return render(request, 'jobs/index.html', {'form': form})
+    version = VERSION
+    return render(
+        request,
+        'jobs/index.html',
+        {
+            'form': form,
+            'version': version
+        }
+    )
 
 
 def results(request):
