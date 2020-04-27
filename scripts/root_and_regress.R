@@ -38,10 +38,7 @@ stats.file <- args$stats
 
 # read tree and info
 tree <- read.tree(tree.file)
-info <- read.csv(info.file, stringsAsFactors = FALSE)
-
-setDT(info)
-setnames(info, "X...ID", "ID", skip_absent=TRUE)
+info <- fread(file=info.file, data.table=FALSE)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
 	stop("Info file column names are incorrect")

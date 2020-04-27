@@ -8,7 +8,9 @@
 
 <p>Job created on: {{ job.created_at }}</p>
 <p>Your job ID is: {{ job.job_id }}</p>
-<p>Job Status: {{ status }}</p>
+<div class="alert alert-{{ alert_suffix }}">
+    Job Status: {{ status }}
+</div>
 
 {% if job.status == "F" %}
     <p>

@@ -430,11 +430,8 @@ plot.prefix <- args$plotprefix
 
 # read tree, info and stats
 tree <- read.tree(rooted.tree.file)
-info <- read.csv(info.file, stringsAsFactors = FALSE)
+info <- fread(file=info.file, data.table=FALSE)
 stats <- read.csv(stats.file, stringsAsFactors = FALSE)
-
-setDT(info)
-setnames(info, "X...ID", "ID", skip_absent=TRUE)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
         stop("Info file column names are incorrect")

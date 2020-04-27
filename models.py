@@ -74,6 +74,14 @@ class Job(models.Model):
         (k, v) for k,v in my_choices_dict.items()
     ]
 
+    bootstrap_alerts = {
+        'N': 'secondary',
+        'R': 'info',
+        'S': 'success',
+        'F': 'danger',
+        'K': 'danger'
+    }
+
     status = models.CharField(
         max_length = 1,
         choices=my_choices,

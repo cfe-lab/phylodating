@@ -47,9 +47,11 @@ def results(request):
 def details(request, job_id):
     job = Job.objects.get(job_id=job_id)
     readable_status = job.my_choices_dict[job.status]
+    alert_suffix = job.bootstrap_alerts[job.status]
     context = {
         'job': job,
-        'status': readable_status
+        'status': readable_status,
+        'alert_suffix': alert_suffix
     }
     return render(request, 'jobs/details.html', context)
 
