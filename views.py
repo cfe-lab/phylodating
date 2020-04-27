@@ -8,7 +8,11 @@ from django.shortcuts import redirect
 from .models import Job
 from .forms import JobForm
 from .utils import JobProcess
+from django.core import management
+import subprocess
 
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT = os.path.dirname(THIS_DIR)
 
 def index(request):
     form = JobForm()
@@ -20,10 +24,9 @@ def results(request):
         form = JobForm(request.POST, request.FILES)
         if form.is_valid():
             new_job = form.save()
-            process = JobProcess(new_job)
-            context = {
-                'process': process
-            }
+            # This is to call the command via code
+            # management.call_command('submit_job', new_job.id)
+            subprocess.Popen(['/usr/local/bin/python3.7', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
             return redirect(new_job)
         else:
             return HttpResponse(f'Form is invalid: {form.errors}')
@@ -34,8 +37,10 @@ def results(request):
 
 def details(request, job_id):
     job = Job.objects.get(job_id=job_id)
+    readable_status = job.my_choices_dict[job.status]
     context = {
         'job': job,
+        'status': readable_status
     }
     return render(request, 'jobs/details.html', context)
 
@@ -52,4 +57,5 @@ def download(request, job_id):
         z.write(job.data_out.path, os.path.basename(job.data_out.path))
         z.write(job.rooted_tree_out.path, os.path.basename(job.rooted_tree_out.path))
         z.write(job.stats_out.path, os.path.basename(job.stats_out.path))
+        z.write(job.plot.path, os.path.basename(job.plot.path))
     return response

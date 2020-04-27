@@ -6,6 +6,7 @@ library(dplyr)
 library(magrittr)
 library(tidytree)
 library(lubridate)
+library(data.table)
 
 # Placeholders
 STEPS <- 100
@@ -431,6 +432,9 @@ plot.prefix <- args$plotprefix
 tree <- read.tree(rooted.tree.file)
 info <- read.csv(info.file, stringsAsFactors = FALSE)
 stats <- read.csv(stats.file, stringsAsFactors = FALSE)
+
+setDT(info)
+setnames(info, "X...ID", "ID", skip_absent=TRUE)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
         stop("Info file column names are incorrect")

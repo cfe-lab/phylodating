@@ -27,13 +27,19 @@ class JobProcess:
         self.status = 'N'
         self.errors = []
         self.update_output_paths()
+        self.update_status('R')
         self.jobs = {
             'root_and_regress': self.root_and_regress(),
             'plot_divergence': self.plot()
         }
-        self.update_status()
+        self.update()
 
-    def update_status(self):
+    def update_status(self, status):
+        self.status = status
+        self.job_model.status = self.status
+        self.job_model.save()
+
+    def update(self):
         stdout = []
         stderr = []
         cmds = []
@@ -42,7 +48,7 @@ class JobProcess:
                 continue
             stdout.append(f'{name}: {completed.stdout}')
             stderr.append(f'{name}: {completed.stderr}')
-            cmds.append(' '.join(completed.args))
+            cmds.append(' '.join([str(x) for x in completed.args]))
             if 'error' in completed.stderr.lower():
                 self.errors.append(completed.stderr)
         if self.errors:

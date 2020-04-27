@@ -1,10 +1,14 @@
+{% extends './bootstrap.html' %}
+
+{% block content %}
+
 <h1>
     Details
 </h1>
 
 <p>Job created on: {{ job.created_at }}</p>
 <p>Your job ID is: {{ job.job_id }}</p>
-<p>Job Status: {{ job.status }}</p>
+<p>Job Status: {{ status }}</p>
 
 {% if job.status == "F" %}
     <p>
@@ -12,6 +16,14 @@
     </p>
 {% endif %}
 
-<a href="{% url 'phylodating:download' job_id=job.job_id %}">
-    <button>Download</button>
-</a>
+{% if job.status == 'S' %}
+    <a href="{% url 'phylodating:download' job_id=job.job_id %}">
+    <button class="btn btn-primary">Download</button>
+    </a>
+{% endif %}
+
+{% if job.status == 'R' or job.status == 'N' %}
+    <p>Your job is currently in progress, try refreshing the page or saving the url and accessing it later</p>
+{% endif %}
+
+{% endblock %}

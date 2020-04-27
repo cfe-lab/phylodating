@@ -2,6 +2,7 @@ library(ape)
 library(optparse)
 library(dplyr)
 library(chemCal)
+library(data.table)
 
 DATE_FMT <- "%Y-%m-%d"
 
@@ -38,6 +39,9 @@ stats.file <- args$stats
 # read tree and info
 tree <- read.tree(tree.file)
 info <- read.csv(info.file, stringsAsFactors = FALSE)
+
+setDT(info)
+setnames(info, "X...ID", "ID", skip_absent=TRUE)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
 	stop("Info file column names are incorrect")
