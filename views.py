@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from zipfile import ZipFile
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Job
@@ -69,4 +69,12 @@ def download(request, job_id):
         z.write(job.rooted_tree_out.path, os.path.basename(job.rooted_tree_out.path))
         z.write(job.stats_out.path, os.path.basename(job.stats_out.path))
         z.write(job.plot.path, os.path.basename(job.plot.path))
+    return response
+
+
+def download_sample(request):
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    sample_path = os.path.join(current_dir, 'static', 'sample.zip')
+    zip_file = open(sample_path, 'rb')
+    response = FileResponse(zip_file, filename='phylodating_sample_data.zip')
     return response

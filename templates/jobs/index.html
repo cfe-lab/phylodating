@@ -29,4 +29,8 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
+<form action={% url 'phylodating:download_sample' %} method='get'>
+    <button class="btn btn-secondary">Download sample</button>
+</form>
+
 {% endblock %}
