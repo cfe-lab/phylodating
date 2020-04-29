@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
-from phylodating.models import Job
-from phylodating.utils import JobProcess
+from tools.phylodating.models import Job
+from tools.phylodating.utils import JobProcess
 
 class Command(BaseCommand):
     help = 'Submits the job'

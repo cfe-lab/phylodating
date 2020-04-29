@@ -8,15 +8,24 @@ from django.shortcuts import redirect
 from .models import Job
 from .forms import JobForm
 from .utils import JobProcess
+from .version import VERSION
 from django.core import management
 import subprocess
 
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-ROOT = os.path.dirname(THIS_DIR)
+ROOT = '/alldata/bblab_site'
+
 
 def index(request):
     form = JobForm()
-    return render(request, 'jobs/index.html', {'form': form})
+    version = VERSION
+    return render(
+        request,
+        'jobs/index.html',
+        {
+            'form': form,
+            'version': version
+        }
+    )
 
 
 def results(request):
@@ -38,9 +47,11 @@ def results(request):
 def details(request, job_id):
     job = Job.objects.get(job_id=job_id)
     readable_status = job.my_choices_dict[job.status]
+    alert_suffix = job.bootstrap_alerts[job.status]
     context = {
         'job': job,
-        'status': readable_status
+        'status': readable_status,
+        'alert_suffix': alert_suffix
     }
     return render(request, 'jobs/details.html', context)
 

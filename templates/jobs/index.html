@@ -2,9 +2,8 @@
 
 {% block content %}
 
-<h1>
-    Phylodating
-</h1>
+<h1 class="d-inline">Phylodating</h1>
+<h6 class="d-inline float-right">version {{ version }}</h6>
 
 <p>
     Welcome to the main tool page!
@@ -22,7 +21,7 @@
                 </div>
             {% endif %}
             {% if field.name == "email" %}
-                <label>{{ field.label }}</label>
+                <label>{{ field.label }} (optional)</label>
                 {{ field }}
             {% endif %}
         </div>
