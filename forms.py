@@ -17,6 +17,7 @@ class JobForm(ModelForm):
         widgets = {
             'email': TextInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'Enter your email here'
             }),
             'info_csv': FileInput(attrs={
                 'class': 'custom-file-input',

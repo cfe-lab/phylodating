@@ -13,15 +13,31 @@
     {% csrf_token %}
     {% for field in form %}
         <div class="form-group">
-            {% if field.name != "email" %}
-                <label for="id_{{ field.name }}">{{ field.label }}</label>
+
+            {% comment 'Info field' %}{% endcomment %}
+            {% if field.name == "info_csv" %}
+                <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
+                <p class="small form-text text-muted">Info csv file description</p>
                 <div class="custom-file">
                     {{ field }}
                     <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
                 </div>
             {% endif %}
+
+            {% comment 'Unrooted tree field' %}{% endcomment %}
+            {% if field.name == "unrooted_tree" %}
+                <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
+                <p class="small form-text text-muted">Unrooted tree description</p>
+                <div class="custom-file">
+                    {{ field }}
+                    <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
+                </div>
+            {% endif %}
+
+            {% comment 'Email field' %}{% endcomment %}
             {% if field.name == "email" %}
-                <label>{{ field.label }} (optional)</label>
+                <label class="h4">{{ field.label }} (optional)</label>
+                <p class="small form-text text-muted">We will use this to email you when your results are done (if you so choose)</p>
                 {{ field }}
             {% endif %}
         </div>
