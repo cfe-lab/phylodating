@@ -1,7 +1,5 @@
-Phylodating estimates unknown sequences ages from a phylogenetic tree composed of longitudinally derived sequences and query sequences with unknown ages. Longitudinal sequences are used to calibrate a linear regression which is then used to estimate the unknown sequence ages. The methodology is based on:
+Phylodating estimates unknown sequence ages from a phylogenetic tree inferred from longitudinally derived sequences ("input sequences") and sequences with unknown ages ("query sequences"). Input sequences are used to calibrate a linear regression relating their root-to-tip distances with their sampling times, which is then used to estimate the establishment dates of the query sequences. The methodology is based on:
 
 Jones, B. R., et al. (2020) Phylogenetic approach to recover integration dates of latent HIV sequences within-host. PNAS 115 (38) E8958-E8967. doi: 10.1073/pnas.1802028115.
 
-For estimating integration dates of HIV persistent reservoir sequences, you want to begin with a phylogenetic tree inferred from plasma-derived HIV RNA sequences collected over at least 3 times points prior to therapy initiation and HIV DNA sequences collected from the persistent reservoir collected after viral suppression on cART. In the info CSV file put the collection date of each sequence (including the dates of reservoir sequences for the purposes of generating a divergence versus time plot) in the Date column and in the Query column put 0 for plasma-derived sequences and 1 for sequences from the persistent reservoir.
-
-Two files are required by Phylodating (info CSV and unrooted tree files). Details are given below.
+Two files are required by Phylodating (`info.csv` and `unrooted_tree.nwk`). Details are given below.
