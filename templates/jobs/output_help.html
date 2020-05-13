@@ -1,0 +1,28 @@
+{% load markdown_extras %}
+{% load static %}
+
+<h3>Outputs:</h3>
+
+<h4>rooted_tree.nwk</h4>
+<div class="small form-text text-muted">
+    {{ rooted_tree_help | markdown | safe }}
+</div>
+
+<h4>stats.csv</h4>
+<div class="small form-text text-muted">
+    {{ stats_csv_help | markdown | safe }}
+</div>
+
+<h4>data.csv</h4>
+<div class="small form-text text-muted">
+    {{ data_csv_help | markdown | safe }}
+</div>
+
+<h4>divergence_vs_time.png</h4>
+<div class="small form-text text-muted">
+    {{ divergence_vs_time_help | markdown | safe }}
+</div>
+<figure class="figure w-50">
+    <img class="figure-img img-fluid rouded" src="{% static "plot_example.png" %}">
+    <figcaption class="figure-caption">divergence_vs_time.png example</figcaption>
+</figure>

@@ -1,45 +1,55 @@
 {% extends './bootstrap.html' %}
+{% load markdown_extras %}
 
 {% block content %}
 
 <h1 class="d-inline">Phylodating</h1>
 <h6 class="d-inline float-right">version {{ version }}</h6>
 
-<p>
-    Welcome to the main tool page!
-</p>
+<div class="small form-text text-muted mt-2">
+{{ phylodating_help | markdown | safe }}
+</div>
 
 <form action={% url 'phylodating:results' %} method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}
         <div class="form-group">
 
-            {% comment 'Info field' %}{% endcomment %}
-            {% if field.name == "info_csv" %}
-                <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
-                <p class="small form-text text-muted">Info csv file description</p>
-                <div class="custom-file">
-                    {{ field }}
-                    <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
-                </div>
-            {% endif %}
 
-            {% comment 'Unrooted tree field' %}{% endcomment %}
-            {% if field.name == "unrooted_tree" %}
-                <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
-                <p class="small form-text text-muted">Unrooted tree description</p>
-                <div class="custom-file">
-                    {{ field }}
-                    <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
-                </div>
-            {% endif %}
-
-            {% comment 'Email field' %}{% endcomment %}
+            {% comment %} Email field {% endcomment %}
             {% if field.name == "email" %}
                 <label class="h4">{{ field.label }} (optional)</label>
                 <p class="small form-text text-muted">We will use this to email you when your results are done (if you so choose)</p>
                 {{ field }}
             {% endif %}
+
+
+            {% comment %} Info field {% endcomment %}
+            {% if field.name == "info_csv" %}
+                <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
+                <div class="small form-text text-muted">
+                    {{ info_csv_help | markdown | safe }}
+                </div>
+                <div class="custom-file">
+                    {{ field }}
+                    <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
+                </div>
+            {% endif %}
+
+
+            {% comment %} Unrooted tree field {% endcomment %}
+            {% if field.name == "unrooted_tree" %}
+                <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
+                <div class="small form-text text-muted">
+                    {{ unrooted_tree_help | markdown | safe }}
+                </div>
+                {% comment %} <i class="material-icons">help_outline</i> {% endcomment %}
+                <div class="custom-file">
+                    {{ field }}
+                    <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
+                </div>
+            {% endif %}
+
         </div>
     {% endfor %}
     <button type="submit" class="btn btn-primary">Submit</button>
@@ -48,5 +58,9 @@
 <form action={% url 'phylodating:download_sample' %} method='get'>
     <button class="btn btn-secondary">Download sample</button>
 </form>
+
+<hr>
+
+{% include './output_help.html' %}
 
 {% endblock %}

@@ -3,6 +3,23 @@ import os
 from pathlib import Path
 from .models import Job
 import time
+import sys
+import logging
+
+SELF_PATH = Path(os.path.dirname(os.path.realpath(__file__)))
+
+UTILS_PATH = (
+    SELF_PATH
+    / '..'
+    / '..'
+    / 'depend'
+    / 'util_scripts'
+)
+
+UTILS_PATH = os.path.abspath(UTILS_PATH)
+
+sys.path.append(UTILS_PATH)
+import mailer
 
 SCRIPTS = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
@@ -59,6 +76,10 @@ class JobProcess:
         self.job_model.stdout = '\n'.join(stdout)
         self.job_model.stderr = '\n'.join(stderr)
         self.cmd = '\n'.join(cmds)
+        if self.job_model.email:
+            mailer.send_sfu_email(
+                'BCCFE Phylodating', self.job_model.email, 'Your Job Has Completed', 'Your job finished', attachment_list=-1, cc_list=-1
+            )
         self.job_model.save()
 
     def update_output_paths(self):
