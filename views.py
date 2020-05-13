@@ -11,11 +11,17 @@ from .utils import JobProcess
 from .version import VERSION
 from django.core import management
 import subprocess
+from pathlib import Path
+import logging
 
 ROOT = '/alldata/bblab_site'
 
 
 def index(request):
+    cwd = Path(os.path.dirname(os.path.realpath(__file__)))
+    info_csv_md = cwd / 'docs' / 'info_csv.md'
+    with open(info_csv_md) as f:
+        info_csv_md = ''.join(f.readlines())
     form = JobForm()
     version = VERSION
     return render(
@@ -23,7 +29,8 @@ def index(request):
         'jobs/index.html',
         {
             'form': form,
-            'version': version
+            'version': version,
+            'info_csv_md': info_csv_md
         }
     )
 

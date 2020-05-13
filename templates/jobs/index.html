@@ -1,4 +1,5 @@
 {% extends './bootstrap.html' %}
+{% load markdown_extras %}
 
 {% block content %}
 
@@ -9,30 +10,38 @@
     Welcome to the main tool page!
 </p>
 
+{% comment '' %}
+{{ info_csv_md | markdown | safe }}
+{% endcomment %}
+
 <form action={% url 'phylodating:results' %} method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}
         <div class="form-group">
 
+
             {% comment 'Info field' %}{% endcomment %}
             {% if field.name == "info_csv" %}
                 <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
-                <p class="small form-text text-muted">Info csv file description</p>
+                {{ info_csv_md | markdown | safe }}
                 <div class="custom-file">
                     {{ field }}
                     <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
                 </div>
             {% endif %}
 
+
             {% comment 'Unrooted tree field' %}{% endcomment %}
             {% if field.name == "unrooted_tree" %}
                 <label class="h4" for="id_{{ field.name }}">{{ field.label }}</label>
+                <i class="material-icons">help_outline</i>
                 <p class="small form-text text-muted">Unrooted tree description</p>
                 <div class="custom-file">
                     {{ field }}
                     <label for="id_{{ field.name }}" class="custom-file-label">Choose file</label>
                 </div>
             {% endif %}
+
 
             {% comment 'Email field' %}{% endcomment %}
             {% if field.name == "email" %}
