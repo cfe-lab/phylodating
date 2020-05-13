@@ -1,1 +1,1 @@
-A newick unrooted phylogenetic tree file containing all the sequences to be calibrated or dated. The tip labels must exactly match the sequence IDs in the ID column of the info CSV file.
+An unrooted phylogeny (newick tree file) containing all the sequences to be calibrated or dated. *Tip labels must exactly match the sequence IDs in info CSV file.*

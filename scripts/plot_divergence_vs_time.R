@@ -430,7 +430,7 @@ plot.prefix <- args$plotprefix
 
 # read tree, info and stats
 tree <- read.tree(rooted.tree.file)
-info <- fread(file=info.file, data.table=FALSE)
+info <- fread(file = info.file, data.table = FALSE)
 stats <- read.csv(stats.file, stringsAsFactors = FALSE)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
@@ -448,6 +448,7 @@ info$Date <- as.numeric(as.Date(info$Date, format = DATE_FMT))
 
 if (any(is.na(info$Date))) {
   warning("Date format incorrect (should be yyyy-mm-dd). Will not generate plots.")
+  options(show.error.messages = FALSE)
   stop()
 }
 
@@ -458,12 +459,12 @@ fit <- stats$Fit
 
 if (is.na(fit) || is.null(fit) || fit == 0) {
 	warning("Linear model did not fit. Will not generate plots.")
+  options(show.error.messages = FALSE)
 	stop()
 }
 
 if (any(tree$edge.length < 0)) {
-  warning("Negative branch lengths detected. Will not generate plots.")
-	stop()
+	stop("Negative branch lengths detected. Will not generate plots.")
 }
 
 fixed.tree <- tree
