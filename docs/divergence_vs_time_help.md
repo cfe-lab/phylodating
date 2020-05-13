@@ -1,0 +1,1 @@
+The divergence from the root of the tips (sequences) versus their collection dates. Black circles represent calibration tips (plasma) and red diamonds represent query tips (reservoir) Also includes the linear regression as a blue dotted line and ancestral traces as grey lines. An example of the plot is shown below.

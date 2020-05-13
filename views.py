@@ -16,12 +16,27 @@ import logging
 
 ROOT = '/alldata/bblab_site'
 
+def read_markdown(md):
+    with open(md) as f:
+        return f.read()
 
 def index(request):
     cwd = Path(os.path.dirname(os.path.realpath(__file__)))
-    info_csv_md = cwd / 'docs' / 'info_csv.md'
-    with open(info_csv_md) as f:
-        info_csv_md = ''.join(f.readlines())
+    info_csv_help_md = cwd / 'docs' / 'info_csv_help.md'
+    phylodating_help_md = cwd / 'docs' / 'phylodating_help.md'
+    unrooted_tree_help_md = cwd / 'docs' / 'unrooted_tree_help.md'
+    rooted_tree_help_md = cwd / 'docs' / 'rooted_tree_help.md'
+    stats_csv_help_md = cwd / 'docs' / 'stats_csv_help.md'
+    data_csv_help_md = cwd / 'docs' / 'data_csv_help.md'
+    divergence_vs_time_help_md = cwd / 'docs' / 'divergence_vs_time_help.md'
+
+    info_csv_help_md = read_markdown(info_csv_help_md)
+    phylodating_help_md = read_markdown(phylodating_help_md)
+    unrooted_tree_help_md = read_markdown(unrooted_tree_help_md)
+    rooted_tree_help_md = read_markdown(rooted_tree_help_md)
+    stats_csv_help_md = read_markdown(stats_csv_help_md)
+    data_csv_help_md = read_markdown(data_csv_help_md)
+    divergence_vs_time_help_md = read_markdown(divergence_vs_time_help_md)
     form = JobForm()
     version = VERSION
     return render(
@@ -30,7 +45,13 @@ def index(request):
         {
             'form': form,
             'version': version,
-            'info_csv_md': info_csv_md
+            'info_csv_help': info_csv_help_md,
+            'phylodating_help': phylodating_help_md,
+            'unrooted_tree_help': unrooted_tree_help_md,
+            'rooted_tree_help': rooted_tree_help_md,
+            'stats_csv_help': stats_csv_help_md,
+            'data_csv_help': data_csv_help_md,
+            'divergence_vs_time_help': divergence_vs_time_help_md,
         }
     )
 
