@@ -6,7 +6,7 @@
 <h1 class="d-inline">Phylodating</h1>
 <h6 class="d-inline float-right">version {{ version }}</h6>
 
-<div class="small form-text text-muted">
+<div class="small form-text text-muted mt-2">
 {{ phylodating_help | markdown | safe }}
 </div>
 
@@ -58,6 +58,8 @@
 <form action={% url 'phylodating:download_sample' %} method='get'>
     <button class="btn btn-secondary">Download sample</button>
 </form>
+
+<hr>
 
 {% include './output_help.html' %}
 
