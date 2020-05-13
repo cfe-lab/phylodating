@@ -434,20 +434,21 @@ info <- fread(file=info.file, data.table=FALSE)
 stats <- read.csv(stats.file, stringsAsFactors = FALSE)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
-        stop("Info file column names are incorrect")
+  stop("Info file column names are incorrect")
 }
 
 info <- select(info, ID, Date, Query)
 info <- info[match(tree$tip.label, info$ID), ]
 
 if (any(is.na(info))) {
-        stop("Info file missing data")
+  stop("Info file missing data")
 }
 
 info$Date <- as.numeric(as.Date(info$Date, format = DATE_FMT))
 
 if (any(is.na(info$Date))) {
-        stop("Date format incorrect (should be yyyy-mm-dd)")
+  warning("Date format incorrect (should be yyyy-mm-dd). Will not generate plots.")
+  stop()
 }
 
 # estimate node dates
@@ -461,7 +462,7 @@ if (is.na(fit) || is.null(fit) || fit == 0) {
 }
 
 if (any(tree$edge.length < 0)) {
-        warning("Negative branch lengths detected. Will not generate plots.")
+  warning("Negative branch lengths detected. Will not generate plots.")
 	stop()
 }
 

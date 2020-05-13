@@ -53,7 +53,7 @@ if (any(is.na(info))) {
 
 info$Date <- as.numeric(as.Date(info$Date, format = DATE_FMT))
 
-if (any(is.na(info$Date))) {
+if (any(is.na(info$Date[info$Query == 0]))) {
 	stop("Date format incorrect (should be yyyy-mm-dd)")
 }
 
