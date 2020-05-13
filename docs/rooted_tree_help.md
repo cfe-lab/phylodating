@@ -1,1 +1,1 @@
-A rooted version of the input tree, where the root is chosen to maximize the correlation between sampling time of input sequences and their divergence from the root.
+A rooted version of the input tree, where the root is chosen to maximize the correlation between sampling time of **_calibration_** sequences and their divergence from the root.
