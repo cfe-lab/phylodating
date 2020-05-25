@@ -100,7 +100,7 @@ def download(request, job_id):
     context = {
         'job': job
     }
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='application/zip')
     today = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
     response['Content-Disposition'] = f'attachment; filename="phylodating_{job.job_id}_{today}.zip"'
     with ZipFile(response, 'w') as z:
