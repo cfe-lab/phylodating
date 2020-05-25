@@ -15,7 +15,7 @@ from pathlib import Path
 import logging
 from django.urls import reverse
 
-ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+ROOT = Path(os.path.realpath(__file__)).parent.parent.parent
 
 from .mailer import send_sfu_email
 
