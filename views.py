@@ -13,8 +13,11 @@ from django.core import management
 import subprocess
 from pathlib import Path
 import logging
+from django.urls import reverse
 
-ROOT = '/alldata/bblab_site'
+ROOT = Path(os.path.realpath(__file__)).parent.parent.parent
+
+from .mailer import send_sfu_email
 
 def read_markdown(md):
     with open(md) as f:
@@ -64,6 +67,14 @@ def results(request):
             # This is to call the command via code
             # management.call_command('submit_job', new_job.id)
             subprocess.Popen(['/usr/local/bin/python3.7', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
+            sender = 'BCCFE Phylodating'
+            subject = 'Your phylodating job'
+            url = request.build_absolute_uri(reverse('phylodating:details', args=[new_job.job_id]))
+            body = f'Hi there, you recently submitted a job using the BCCFE Phylodating webtool. To check the status of your job and/or download the results please use the following URL:\n\n{url}'
+            if new_job.email:
+                send_sfu_email(
+                    sender, new_job.email, subject, body, attachment_list=-1, cc_list=-1
+                )
             return redirect(new_job)
         else:
             return HttpResponse(f'Form is invalid: {form.errors}')
@@ -89,7 +100,7 @@ def download(request, job_id):
     context = {
         'job': job
     }
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='application/zip')
     today = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
     response['Content-Disposition'] = f'attachment; filename="phylodating_{job.job_id}_{today}.zip"'
     with ZipFile(response, 'w') as z:
