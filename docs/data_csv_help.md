@@ -1,1 +1,1 @@
-A comma separated file that contains the estimated date of all the tips (sequences) of the tree (including both calibration and query tips) and the 95% confidence intervals of the estimates.
+A comma separated file that contains the ID, collection date, sequence type (calibration or query), estimated date and the 95% confidence intervals of the estimates of all sequences (including both calibration and query).

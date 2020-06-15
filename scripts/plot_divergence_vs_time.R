@@ -564,14 +564,6 @@ p$layers <- c(
 
 # save plots
 ggsave(
-	paste0(plot.prefix, ".pdf"),
-	p,
-	'pdf',
-	colormode = 'srgb',
-	useDingbats = FALSE
-)
-
-ggsave(
 	paste0(plot.prefix, ".png"),
 	p,
 	'png'

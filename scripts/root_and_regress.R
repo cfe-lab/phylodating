@@ -87,15 +87,15 @@ root.date <- inverse.predict(model, 0)
 # make output data frames
 data <- data.frame(
 	ID = info$ID,
+	Date=info$Date,
+	Query=info$Query,
 	EstimatedDate = as.character(to.Date(est.date$Prediction), format = DATE_FMT),
 	EstimatedDate95Low = as.character(to.Date(est.date$`Confidence Limits1`), format = DATE_FMT),
 	EstimatedDate95High = as.character(to.Date(est.date$`Confidence Limits2`), format = DATE_FMT),
-	Query=info$Query,
-	Date=info$Date,
 	stringsAsFactors = FALSE
 ) %>%
 	arrange(desc(Query), Date) %>%
-	select(-Date)
+  mutate(Date = as.character(to.Date(Date), format = DATE_FMT))
 
 stats <- data.frame(
 	RunID = run.id,
