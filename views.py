@@ -13,6 +13,7 @@ from django.core import management
 import subprocess
 from pathlib import Path
 import logging
+import traceback
 from django.urls import reverse
 
 ROOT = Path(os.path.realpath(__file__)).parent.parent.parent
@@ -61,7 +62,11 @@ def index(request):
 
 def results(request):
     if request.method == 'POST':
-        form = JobForm(request.POST, request.FILES)
+        try:
+            form = JobForm(request.POST, request.FILES)
+        except Exception as e:
+            logging.error('JobForm could not be instantiated!')
+            logging.error(traceback.format_exc())
         if form.is_valid():
             new_job = form.save()
             # This is to call the command via code
