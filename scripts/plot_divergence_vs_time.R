@@ -38,6 +38,7 @@ my.theme <- theme_bw() +
 		text = element_text(size=20),
 		axis.ticks = element_line(colour = "black"),
 		axis.text = element_text(colour = "black"),
+		plot.margin = unit(c(6, 12, 6, 6), unit = "points")
 	)
 
 # from node.dating (https://github.com/brj1/node.dating/blob/random/R/node.dating.R)
