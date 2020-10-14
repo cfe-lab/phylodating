@@ -35,10 +35,10 @@ my.theme <- theme_bw() +
 	theme(
 		panel.grid = element_blank(),
 		legend.position = 'none',
-		text = element_text(size=20),
+		text = element_text(size=30),
 		axis.ticks = element_line(colour = "black"),
 		axis.text = element_text(colour = "black"),
-		plot.margin = unit(c(6, 12, 6, 6), unit = "points")
+		plot.margin = unit(c(13, 25, 6, 6), unit = "points")
 	)
 
 # from node.dating (https://github.com/brj1/node.dating/blob/random/R/node.dating.R)
