@@ -28,6 +28,7 @@ class JobProcess:
         self.job_model = job_model
         self.status = 'N'
         self.errors = []
+        self.warnings = []
         self.update_output_paths()
         self.update_status('R')
         self.jobs = {
@@ -45,6 +46,7 @@ class JobProcess:
         stdout = []
         stderr = []
         cmds = []
+        job_failed = False
         for name, completed in self.jobs.items():
             if completed is None:
                 continue
@@ -53,13 +55,21 @@ class JobProcess:
             cmds.append(' '.join([str(x) for x in completed.args]))
             if 'error' in completed.stderr.lower():
                 self.errors.append(completed.stderr)
-        if self.errors:
+                if name == 'root_and_regress':
+                    job_failed = True
+                elif name == 'plot_divergence':
+                    self.warnings.append('Divergence plot could not be created')
+            if 'Linear model did not fit' in completed.stderr:
+                self.warnings.append('No evidence of a molecular clock was found in the data.  Please see information in “stats.csv”.  For this reason, the divergence vs. time plot was not created for these data.')
+        if job_failed:
             self.status = 'F'
         else:
             self.status = 'S'
         self.job_model.status = self.status
         self.job_model.stdout = '\n'.join(stdout)
         self.job_model.stderr = '\n'.join(stderr)
+        if self.warnings:
+            self.job_model.warnings = '\n'.join(self.warnings)
         self.cmd = '\n'.join(cmds)
         self.job_model.save()
 

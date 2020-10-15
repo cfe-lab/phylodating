@@ -14,8 +14,11 @@
 
 {% if job.status == "F" %}
     <p>
-        Your job has unfortunately failed :(. Details will be sent to the web administrator who will help you resolve the issue!
+        Your job has unfortunately failed :(. Details will be sent to the web administrator who will help you resolve the issue! For self troubleshooting, see the captured error message below:
     </p>
+    <pre class="bg-light"><code>
+        {{ job.stderr }}
+    </code></pre>
 {% endif %}
 
 {% if job.status == 'S' %}
@@ -27,5 +30,15 @@
 {% if job.status == 'R' or job.status == 'N' %}
     <p>Your job is currently in progress, try refreshing the page or saving the url and accessing it later</p>
 {% endif %}
+
+{% if job.warnings %}
+    <div class="mt-2">
+        <b>Your job produced the following warnings:</b>
+        <div class="alert alert-warning">
+            {{ job.warnings }}
+        </div>
+    </div>
+{% endif %}
+
 
 {% endblock %}

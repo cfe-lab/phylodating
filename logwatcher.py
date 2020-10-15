@@ -38,6 +38,7 @@ class Logwatcher:
             # compare it against the previous size
             # If the size has changed send an email to the admin
         for name, logfile in self.watched_logs.items():
+            print(f'Checking "{logfile}"')
             size = os.path.getsize(logfile)
             if name in self.log_details:
                 if self.log_details[name] != size:
@@ -47,13 +48,15 @@ class Logwatcher:
         self.save_yaml(self.log_details_file, self.log_details)
         # If changed_logs is not empty, send an email about them
         if changed_logs:
+            print('logs have changed!')
             sender = 'Admin'
             receiver = 'bblab-admin@cfenet.ubc.ca'
             subject = 'New Phylodating Errors Detected'
             body = 'Logwatcher has detected new errors in the following logfiles:\n\n{}'.format('\n'.join(changed_logs))
-            send_sfu_email(
+            returncode = send_sfu_email(
                 sender, receiver, subject, body, attachment_list=-1, cc_list=-1
             )
+            print(returncode)
 
 
 def main():

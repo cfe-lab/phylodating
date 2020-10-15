@@ -92,6 +92,12 @@ class Job(models.Model):
 
     stderr = models.TextField()
 
+    warnings = models.TextField(
+        default=None,
+        blank=True,
+        null=True
+    )
+
     cmd = models.TextField(
         blank=True
     )

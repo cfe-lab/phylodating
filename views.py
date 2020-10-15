@@ -71,7 +71,7 @@ def results(request):
             new_job = form.save()
             # This is to call the command via code
             # management.call_command('submit_job', new_job.id)
-            subprocess.Popen(['/usr/local/bin/python3.7', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
+            subprocess.Popen(['/usr/local/bin/python3.8', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
             sender = 'BCCFE Phylodating'
             subject = 'Your phylodating job'
             url = request.build_absolute_uri(reverse('phylodating:details', args=[new_job.job_id]))
@@ -108,11 +108,18 @@ def download(request, job_id):
     response = HttpResponse(content_type='application/zip')
     today = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
     response['Content-Disposition'] = f'attachment; filename="phylodating_{job.job_id}_{today}.zip"'
+    warnings = []
     with ZipFile(response, 'w') as z:
-        z.write(job.data_out.path, os.path.basename(job.data_out.path))
-        z.write(job.rooted_tree_out.path, os.path.basename(job.rooted_tree_out.path))
-        z.write(job.stats_out.path, os.path.basename(job.stats_out.path))
-        z.write(job.plot.path, os.path.basename(job.plot.path))
+        for _file in (
+            job.data_out.path,
+            job.rooted_tree_out.path,
+            job.stats_out.path,
+            job.plot.path
+        ):
+            try:
+                z.write(_file, os.path.basename(_file))
+            except FileNotFoundError:
+                warnings.append(f'File not generated: "{_file}"')
     return response
 
 
