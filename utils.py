@@ -60,7 +60,7 @@ class JobProcess:
                 elif name == 'plot_divergence':
                     self.warnings.append('Divergence plot could not be created')
             if 'Linear model did not fit' in completed.stderr:
-                self.warnings.append('No evidence of a molecular clock was found in the data.  Please see information in “stats.csv”.  For this reason, the divergence vs. time plot was not created for these data.')
+                self.warnings.append('ERROR: the dataset failed quality control checks.  Either no evidence of a molecular clock was found in the data and/or the 95% confidence interval of the root date estimate falls after the date of first sampling. Please see information in “stats.csv”.  For this reason, the divergence vs. time plot was not created for these data.')
         if job_failed:
             self.status = 'F'
         else:
