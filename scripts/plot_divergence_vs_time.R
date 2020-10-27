@@ -528,7 +528,8 @@ date.labels <- dates %>%
 	seq(by = sep, length.out = 7)
 date.breaks <- date.labels %>%
 	as.character() %>%
-	as.Date(format = "%Y") %>%
+  paste0("-01-01") %>%
+	as.Date(format = DATE_FMT) %>%
 	as.numeric()
 
 # make plot
