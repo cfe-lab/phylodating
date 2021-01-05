@@ -1,3 +1,6 @@
 A rooted version of the input tree, where the root is chosen to maximize the correlation between sampling time of **_calibration_** sequences and their divergence from the root.
 
-**A note on identical HIV sequences:** *Identical HIV sequences commonly occur in within-host HIV sequence datasets.  While the phylodating tool will accept tree files containing terminal branches of zero length (caused by identical sequences), large numbers of these in the calibration dataset can bias the regression. Similarly, large numbers of identical sequences in the query dataset can bias the average sequence ages in this dataset.  To avoid this, consider identifying identical HIV sequences in the calibration dataset, and include only the earliest instance of each sequence when inferring your phylogeny.  As for query sequences, consider whether you are primarily interested in the age distribution of distinct HIV sequences, or whether you are interested in the age distribution of all sequences, regardless of whether they are identical or not.  If the former, restrict the query dataset to distinct HIV sequences only prior to inferring your phylogeny.*
+Example:
+```
+(((DNA1:0.010733,RNA1:0.001053):0.001021,(RNA2:0.007126,((DNA2:0.005841,RNA3:0.000712):0.004969,(RNA4:0.008952,(DNA4:0.019875,(RNA6:0.003845,RNA7:0.01993):0.006931):0.030149):0.007087):0.010048):0.00697):0.01418479131,(RNA5:0.019962,DNA3:0.001):0.02586320869);
+```

@@ -125,7 +125,7 @@ def download(request, job_id):
 
 def download_sample(request):
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    sample_path = os.path.join(current_dir, 'static', 'sample.zip')
+    sample_path = os.path.join(current_dir, 'static', 'phylodating_sample.zip')
     zip_file = open(sample_path, 'rb')
     response = FileResponse(zip_file, as_attachment=True)#filename='phylodating_sample_data.zip')
     return response
