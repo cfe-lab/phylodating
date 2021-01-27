@@ -566,7 +566,8 @@ p$layers <- c(
 
 # save plots
 ggsave(
-	paste0(plot.prefix, ".png"),
+	paste0(plot.prefix, ".pdf"),
 	p,
-	'png'
+	'pdf',
+	useDingbats = FALSE
 )

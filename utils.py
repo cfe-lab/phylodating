@@ -85,7 +85,7 @@ class JobProcess:
         self.job_model.rooted_tree_out.name = os.path.join(root, 'rooted_tree.nwk')
         self.job_model.data_out.name = os.path.join(root, 'data.csv')
         self.job_model.stats_out.name = os.path.join(root, 'stats.csv')
-        self.job_model.plot.name = os.path.join(root, 'divergence_vs_time.png')
+        self.job_model.plot.name = os.path.join(root, 'divergence_vs_time.pdf')
         self.job_model.save()
 
     def spawn(self, cmd):
