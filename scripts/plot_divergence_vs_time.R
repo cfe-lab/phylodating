@@ -160,8 +160,8 @@ estimate.dates <- function(
 			} else {
 				calc.Like(
 					c(dates[ch], x),
-					c(t$edge.length[ch.edge],
-					  t$edge.length[p.edge]),
+					c(ch.edge,
+					  p.edge),
 					c(rep(x, length(dates[ch])), dates[p])
 				)
 			},
