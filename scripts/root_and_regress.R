@@ -38,7 +38,7 @@ stats.file <- args$stats
 
 # read tree and info
 tree <- read.tree(tree.file)
-info <- fread(file=info.file, data.table=FALSE)
+info <- fread(file = info.file, data.table = FALSE, colClasses = 'character')
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
 	stop("Info file column names are incorrect")
@@ -52,6 +52,7 @@ if (any(is.na(info))) {
 }
 
 info$Date <- as.numeric(as.Date(info$Date, format = DATE_FMT))
+info$Query <- as.numeric(info$Query)
 
 if (any(is.na(info$Date[info$Query == 0]))) {
 	stop("Date format incorrect (should be yyyy-mm-dd)")
