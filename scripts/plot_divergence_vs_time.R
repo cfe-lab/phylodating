@@ -1,12 +1,16 @@
-library(optparse)
-library(ape)
-library(ggtree)
-library(ggplot2)
-library(dplyr)
-library(magrittr)
-library(tidytree)
-library(lubridate)
-library(data.table)
+suppressPackageStartupMessages(
+  {
+    library(optparse, quietly = TRUE)
+    library(ape, quietly = TRUE)
+    library(ggtree, quietly = TRUE)
+    library(ggplot2, quietly = TRUE)
+    library(dplyr, quietly = TRUE)
+    library(magrittr, quietly = TRUE)
+    library(tidytree, quietly = TRUE)
+    library(lubridate, quietly = TRUE)
+    library(data.table, quietly = TRUE)
+  }
+)
 
 # Placeholders
 STEPS <- 100
@@ -29,6 +33,8 @@ SHAPE_VALUES <- c(16, 18)
 
 # utility function
 to.Date <- function(...) as.Date(..., origin = "1970-01-01")
+
+enquote <- function(x) paste0("\"", x, "\"")
 
 # plot theme
 my.theme <- theme_bw() +
@@ -427,29 +433,126 @@ rooted.tree.file <- args$rootedtree
 stats.file <- args$stats
 plot.prefix <- args$plotprefix
 
-### TODO check arguments
+output.access <- file.access(
+  dirname(c(plot.prefix))
+)
+
+if (any(output.access) != 0) {
+  stop(
+    sprintf(
+      "Cannot write: %s (either output directory missing or lack permission)",
+      paste0(
+        c("rooted tree file", "data file", "stats file")[output.access != 0],
+        collapse = ", "
+      )
+    )
+  )
+}
 
 # read tree, info and stats
-tree <- read.tree(rooted.tree.file)
-info <- fread(file = info.file, data.table = FALSE, colClasses = 'character')
-stats <- read.csv(stats.file, stringsAsFactors = FALSE)
+tryCatch(
+  {tree <- read.tree(rooted.tree.file)},
+  error = function(e) {
+    stop(
+      paste0(
+        "Failed to read tree file. Tree file should be in newick format.\n",
+        e
+      )
+    )
+  }
+)
+
+if (is.null(tree)) {
+  stop("Failed to read tree file. Tree file should be in newick format.")
+}
+
+tryCatch(
+  {info <- fread(file = info.file, data.table = FALSE, colClasses = 'character')},
+  error = function(e) {
+    stop(
+      paste0(
+        "Failed to read info file. Info file should be in comma seperated value (CSV) format.\n",
+        e
+      )
+    )
+  }
+)
+
+tryCatch(
+  {stats <- read.csv(stats.file, stringsAsFactors = FALSE)},
+  error = function(e) {
+    stop(
+      paste0(
+        "Failed to read stats file. Stats file should be in comma seperated value (CSV) format.\n",
+        e
+      )
+    )
+  }
+)
+
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
-  stop("Info file column names are incorrect")
+  error.message <- sprintf(
+    "Info file column names are incorrect (missing columns: %s)",
+    paste0(
+      c("ID", "Date", "Query")[! c("ID", "Date", "Query") %in% names(info)],
+      collapse = ", "
+    )
+  )
+  
+  stop(error.message)
+}
+
+if (!all(c("EstimatedRootDate", "EstimatedEvolutionaryRate", "Fit") %in% names(stats))) {
+  error.message <- sprintf(
+    "Stats file column names are incorrect (missing columns: %s)",
+    paste0(
+      c("EstimatedRootDate", "EstimatedEvolutionaryRate", "Fit")[! c("EstimatedRootDate", "EstimatedEvolutionaryRate", "Fit") %in% names(stats)],
+      collapse = ", "
+    )
+  )
+  
+  stop(error.message)
 }
 
 info <- select(info, ID, Date, Query)
 info <- info[match(tree$tip.label, info$ID), ]
 
 if (any(is.na(info))) {
-  stop("Info file missing data")
+  if (all(tree$tip.label %in% info$ID)) {
+    paste.list <- enquote(info$ID[is.na(info$Date) | is.na(info$Query)])
+    
+    error.message <- sprintf(
+      "Info file missing date or query data (for ID: %s)",
+      paste0(
+        paste.list,
+        collapse = ", "
+      )
+    )
+  } else {
+    paste.list <- enquote(tree$tip.label[! tree$tip.label %in% info$ID])
+
+    error.message <- sprintf(
+      "Info file missing data (ID in tree file not found in info file: %s)",
+      paste0(
+        paste.list,
+        collapse = ", "
+      )
+    )
+  }
+  
+  stop(error.message)
 }
 
 info$Date <- as.numeric(as.Date(info$Date, format = DATE_FMT))
 info$Query <- as.numeric(info$Query)
 
+if (any(is.na(info$Query))) {
+  stop("Query format of Query column of info file is incorrect (should be 0 for training or 1 for query)")
+}
+
 if (any(is.na(info$Date))) {
-  warning("Date format incorrect (should be yyyy-mm-dd). Will not generate plots.")
+  warning("Date format of Date column of info file is incorrect (should be yyyy-mm-dd). Will not generate plots.")
   options(show.error.messages = FALSE)
   stop()
 }
@@ -466,7 +569,9 @@ if (is.na(fit) || is.null(fit) || fit == 0) {
 }
 
 if (any(tree$edge.length < 0)) {
-	stop("Negative branch lengths detected. Will not generate plots.")
+	warning("Negative branch lengths detected. Will not generate plots.")
+  options(show.error.messages = FALSE)
+  stop()
 }
 
 fixed.tree <- tree

@@ -1,10 +1,16 @@
-library(ape)
-library(optparse)
-library(dplyr)
-library(chemCal)
-library(data.table)
+suppressPackageStartupMessages(
+  {
+    library(ape, quietly = TRUE)
+    library(optparse, quietly = TRUE)
+    library(dplyr, quietly = TRUE)
+    library(chemCal, quietly = TRUE)
+    library(data.table, quietly = TRUE)
+  }
+)
 
 DATE_FMT <- "%Y-%m-%d"
+
+enquote <- function(x) paste0("\"", x, "\"")
 
 # utility function
 to.Date <- function(...) as.Date(..., origin = "1970-01-01")
@@ -34,31 +40,102 @@ rooted.tree.file <- args$rootedtree
 data.file <- args$data
 stats.file <- args$stats
 
-### TODO check arguments
+output.access <- file.access(
+  dirname(c(rooted.tree.file, data.file, stats.file))
+)
+
+if (any(output.access) != 0) {
+  stop(
+    sprintf(
+      "Cannot write: %s (either output directory missing or lack permission)",
+      paste0(
+        c("rooted tree file", "data file", "stats file")[output.access != 0],
+        collapse = ", "
+      )
+    )
+  )
+}
 
 # read tree and info
-tree <- read.tree(tree.file)
-info <- fread(file = info.file, data.table = FALSE, colClasses = 'character')
+tryCatch(
+  {tree <- read.tree(tree.file)},
+  error = function(e) {
+    stop(
+      paste0(
+        "Failed to read tree file. Tree file should be in newick format.\n",
+        e
+      )
+    )
+  }
+)
+
+if (is.null(tree)) {
+  stop("Failed to read tree file. Tree file should be in newick format.")
+}
+
+tryCatch(
+  {info <- fread(file = info.file, data.table = FALSE, colClasses = 'character')},
+  error = function(e) {
+    stop(
+      paste0(
+        "Failed to read info file. Info file should be in comma seperated value (CSV) format.\n",
+        e
+      )
+    )
+  }
+)
 
 if (!all(c("ID", "Date", "Query") %in% names(info))) {
-	stop("Info file column names are incorrect")
+  error.message <- sprintf(
+    "Info file column names are incorrect (missing columns: %s)",
+    paste0(
+      c("ID", "Date", "Query")[! c("ID", "Date", "Query") %in% names(info)],
+      collapse = ", "
+    )
+  )
+  
+	stop(error.message)
 }
 
 info <- select(info, ID, Date, Query)
 info <- info[match(tree$tip.label, info$ID), ]
 
 if (any(is.na(info))) {
-	stop("Info file missing data")
+  if (all(tree$tip.label %in% info$ID)) {
+    paste.list <- enquote(info$ID[is.na(info$Date) | is.na(info$Query)])
+    
+    error.message <- sprintf(
+      "Info file missing date or query data (for ID: %s)",
+       paste0(
+         paste.list,
+         collapse = ", "
+      )
+    )
+  } else {
+    paste.list <- enquote(tree$tip.label[! tree$tip.label %in% info$ID])
+
+    error.message <- sprintf(
+      "Info file missing data (ID in tree file not found in info file: %s)",
+      paste0(
+        paste.list,
+        collapse = ", "
+      )
+    )
+  }
+  
+	stop(error.message)
 }
 
 info$Date <- as.numeric(as.Date(info$Date, format = DATE_FMT))
 info$Query <- as.numeric(info$Query)
 
-if (any(is.na(info$Date[info$Query == 0]))) {
-	stop("Date format incorrect (should be yyyy-mm-dd)")
+if (any(is.na(info$Query))) {
+  stop("Query format of Query column of info file is incorrect (should be 0 for training or 1 for query)")
 }
 
-#browser()
+if (any(is.na(info$Date[info$Query == 0]))) {
+	stop("Date format of Date column of info file is incorrect (should be yyyy-mm-dd)")
+}
 
 # remove zero length branches if they exist
 if (any(tree$edge.length < 1e-7)) {
