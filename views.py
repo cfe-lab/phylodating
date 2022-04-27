@@ -71,7 +71,7 @@ def results(request):
             new_job = form.save()
             # This is to call the command via code
             # management.call_command('submit_job', new_job.id)
-            subprocess.Popen(['/usr/local/bin/python3.8', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
+            subprocess.Popen(['/usr/local/bin/python3', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
             sender = 'BCCFE Phylodating'
             subject = 'Your phylodating job'
             url = request.build_absolute_uri(reverse('phylodating:details', args=[new_job.job_id]))
