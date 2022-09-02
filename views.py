@@ -72,7 +72,7 @@ def results(request):
             # This is to call the command via code
             # management.call_command('submit_job', new_job.id)
             subprocess.Popen(['/usr/local/bin/python3', os.path.join(ROOT, 'manage.py'), 'submit_job', str(new_job.id)])
-            sender = 'BCCFE Phylodating'
+            sender = 'BCCFE_Phylodating'
             subject = 'Your phylodating job'
             url = request.build_absolute_uri(reverse('phylodating:details', args=[new_job.job_id]))
             body = f'Hi there, you recently submitted a job using the BCCFE Phylodating webtool. To check the status of your job and/or download the results please use the following URL:\n\n{url}'

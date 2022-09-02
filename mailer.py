@@ -1,6 +1,6 @@
 ## Checked for 3.7 ##
 
-import smtplib
+import smtplib, os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -28,7 +28,7 @@ def send_sfu_email(sender_name, reciever_email, subject_text, body_text, attachm
 	'''This function sends an email from an sfu email.
 		attachment_list is a list of the attachment class.  -1 means no attachments. attachment_list must be a list.'''
 	### Construct the message and sending information.
-	sender = "{}@sfu.ca".format(sender_name)
+	sender = "{}@bccfe.ca".format(sender_name)
 	reciever = reciever_email
 
 	msg = MIMEMultipart()
@@ -54,9 +54,11 @@ def send_sfu_email(sender_name, reciever_email, subject_text, body_text, attachm
 	try:
 		### for some reason the newer smtp server thinks we aren't part of sfu
 		### so we have to use the old smtp server.
-		#smtpObj = smtplib.SMTP("mailgate.sfu.ca", 0)
-		smtpObj = smtplib.SMTP("smtpserver.sfu.ca", 25)
-		smtpObj.sendmail(sender, send_to, msg.as_string())
+		smtpobj = smtplib.SMTP(os.environ['SMTP_MAIL_SERVER'], os.environ['SMTP_MAIL_PORT'])
+		smtpobj.starttls()
+		smtpobj.ehlo()
+		smtpobj.login(os.environ['SMTP_MAIL_USER'], os.environ['SMTP_MAIL_PASSWORD'])
+		smtpobj.sendmail(sender, send_to, msg.as_string())
 		return 0
 	except Exception as e:
 		print ( "Error: unable to send email. \nError: {}".format(e) )

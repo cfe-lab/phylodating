@@ -49,8 +49,8 @@ class Logwatcher:
         # If changed_logs is not empty, send an email about them
         if changed_logs:
             print('logs have changed!')
-            sender = 'Admin'
-            receiver = 'bblab-admin@cfenet.ubc.ca'
+            sender = 'Phylodating_Logwatcher'
+            receiver = 'bblab-admin@bccfe.ca'
             subject = 'New Phylodating Errors Detected'
             body = 'Logwatcher has detected new errors in the following logfiles:\n\n{}'.format('\n'.join(changed_logs))
             returncode = send_sfu_email(
